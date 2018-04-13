@@ -53,7 +53,7 @@ let findOn552 = (pData) => {
 
 let logposition = (evt) => {
     //console.log('position', event.offsetX, event.offsetY);
-    var pixelData = ctx.getImageData( event.offsetX, event.offsetY,1,1).data;
+    var pixelData = ctx.getImageData( evt.offsetX, evt.offsetY,1,1).data;
     findOn552(pixelData);
     //console.log('data',pixelData);
 }
