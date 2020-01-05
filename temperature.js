@@ -34,16 +34,16 @@ const cmpRgb = (p1,p2) => (p1[0] == p2[0] && p1[1] == p2[1] && p1[2] == p2[2]);
 console.log(img.width, img.height, img.src);
 
 const findOnLegend = (pointedRgb) => {
-    let ypsilon=73;
-    for(ypsilon=73; ypsilon<549; ypsilon++) {
-      const legendRgb =  getRgbInPoint( 555, ypsilon,1,1);
-      if(cmpRgb(legendRgb, pointedRgb)) break;
-    }
-    if (ypsilon < 549 ) {
-      drawImageAndArrow(img, ypsilon);
-    } else {
-      //console.log('not found', ypsilon)
-    }
+  const minY=73, maxY=549, legendX=555;
+  let ypsilon=minY;
+  while(!cmpRgb(pointedRgb, getRgbInPoint(legendX, ypsilon)) && ypsilon<maxY ) {
+    ypsilon++;
+  }
+  if (ypsilon < maxY ) {
+    drawImageAndArrow(img, ypsilon);
+  } else {
+    //console.log('not found', ypsilon)
+  }
 };
 
 let logposition = (evt) => {
