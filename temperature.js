@@ -1,13 +1,11 @@
-
-var img = document.getElementById('my-image');
+const img = document.getElementById('my-image');
 //var canvas = document.createElement('canvas');
-var canvas = document.getElementById('canvas');
+const canvas = document.getElementById('canvas');
 canvas.width = img.width;
 canvas.height = img.height;
-let ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d');
 
-let drawArrow = (y) => {
-    let baseX = 555;
+const drawArrow = (y, baseX = 555) => {
     ctx.strokeStyle = '#000000';
     ctx.lineWidth=3;
     ctx.beginPath();
@@ -20,42 +18,38 @@ let drawArrow = (y) => {
     ctx.stroke();
 }
 
-let cImg = new Image();
-cImg.src = img.src
-cImg.onload = () => {
-    ctx.drawImage(img, 0, 0, img.width, img.height);
-	drawArrow(100);
-}    
+const drawImageAndArrow = (img, ypos) => {
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+  drawArrow(ypos);
+}
 
+const cImg = new Image();
+cImg.src = img.src
+cImg.onload = () => drawImageAndArrow(img, 100);
+
+const getRgbInPoint = (x, y) => ctx.getImageData( x, y,1,1).data
+
+const cmpRgb = (p1,p2) => (p1[0] == p2[0] && p1[1] == p2[1] && p1[2] == p2[2]);
 
 console.log(img.width, img.height, img.src);
 
-let findOn552 = (pData) => {
+const findOnLegend = (pointedRgb) => {
     let ypsilon=73;
     for(ypsilon=73; ypsilon<549; ypsilon++) {
-	let lData =  ctx.getImageData( 555, ypsilon,1,1).data;
-	if(lData[0] == pData[0] &&
-	   lData[1] == pData[1] &&
-	   lData[2] == pData[2]) {
-	    break;
-	}
+      const legendRgb =  getRgbInPoint( 555, ypsilon,1,1);
+      if(cmpRgb(legendRgb, pointedRgb)) break;
     }
     if (ypsilon < 549 ) {
-	ctx.drawImage(img, 0, 0, img.width, img.height);
-	drawArrow(ypsilon);
-	//ctx.drawLine(552,ypsilon, 562,ypsilon);
+      drawImageAndArrow(img, ypsilon);
     } else {
-	console.log('not found', ypsilon)
+      //console.log('not found', ypsilon)
     }
 };
 
-	drawArrow(100);
-
 let logposition = (evt) => {
     //console.log('position', event.offsetX, event.offsetY);
-    var pixelData = ctx.getImageData( evt.offsetX, evt.offsetY,1,1).data;
-    findOn552(pixelData);
-    //console.log('data',pixelData);
+    const pointedRgb = getRgbInPoint(evt.offsetX, evt.offsetY);
+    findOnLegend(pointedRgb);
 }
 
 canvas.addEventListener('mousemove',logposition);
